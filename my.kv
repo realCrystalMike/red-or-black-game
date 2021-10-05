@@ -88,6 +88,24 @@
             size: self.size
             pos: self.pos
             radius: [25]
+<InButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<OutButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
 <QuitButton@Button>
     background_color: (0, 0, 0, 0)
     canvas.before:
@@ -129,6 +147,7 @@ WindowManager:
     RedBlack:
     HighLow:
     OddEven:
+    InOut:
     NextPlayer:
     NoMoreCards:
 
@@ -203,7 +222,7 @@ WindowManager:
                 id: rb_check
                 pos_hint: {'right_x', 'center_y'}
                 active: True
-                on_active: root.rb_checked(self, self.active), root.update()
+                on_active: root.update()
             Label:
                 id: hltext
                 text: "Higher or Lower"
@@ -213,7 +232,7 @@ WindowManager:
             Switch:
                 id: hl_check
                 active: True
-                on_active: root.hl_checked(self, self.active), root.update()
+                on_active: root.update()
             Label:
                 id: oetext
                 text: "Odd or Even"
@@ -223,7 +242,18 @@ WindowManager:
             Switch:
                 id: oe_check
                 active: True
-                on_active: root.oe_checked(self, self.active), root.update()
+                on_active: root.update()
+            Label:
+                id: iotext
+                text: "In or Out"
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+            Switch:
+                id: io_check
+                active: False
+                on_active: root.update()
+                # on_active_norm_pos: root.update()
         QuitButton:
             text: "Return"
             on_press: root.back()
@@ -344,7 +374,6 @@ WindowManager:
                 on_press: root.exit()
 
 <OddEven>
-
     name: "oddevenwindow"
     on_pre_enter: root.update(0)
     BoxLayout:
@@ -402,6 +431,63 @@ WindowManager:
                 color: utils.get_color_from_hex('#141414')
                 on_press: root.exit()
 
+<InOut>
+    name: "inoutwindow"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        Label:
+            text: "Waiting..."
+            id: waiting
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+        Image: 
+            id: cardimage
+            source: "Images/card_back.png"
+            size_hint_x: 1
+            size_hint_y: root.height*0.5807
+            allow_stretch: True
+            keep_ratio: True
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.1613
+            spacing: 10
+            padding: 10
+            InButton:
+                text: "IN"
+                id: inn
+                on_press: root.pressed(1)
+                color:utils.get_color_from_hex('#141414')
+            OutButton:
+                text: "OUT"
+                id: out
+                on_press: root.pressed(2)
+                color:utils.get_color_from_hex('#F2F2F2')
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+            padding: 10
+            Label:
+                id: drinks
+                text: ""
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle' 
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
 <NextPlayer>
     name: "nextplayerwindow"
     on_pre_enter: root.update(0)

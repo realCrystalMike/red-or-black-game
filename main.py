@@ -106,6 +106,7 @@ class MainMenu(Screen):
 class SettingsMenu(Screen):
     def update(self, *args):
         global rb_play, hl_play, oe_play, io_play, su_play
+        self.ids.hl_check.disabled = False
         if self.ids.rb_check.active == True:
             self.ids.rbtext.color = "green"
             self.ids.oe_check.disabled = False
@@ -137,16 +138,26 @@ class SettingsMenu(Screen):
             self.ids.rb_check.active = True
             self.ids.rb_check.disabled = True
             oe_play = 0
-        
+
+        if int(rb_play + hl_play + oe_play) < 2:
+            self.ids.io_check.active = False
+            self.ids.io_check.disabled = True
+        if int(rb_play + hl_play + oe_play) >= 2:
+            self.ids.io_check.disabled = False
+
+        if self.ids.io_check.active == True:
+            self.ids.iotext.color = "green"
+        elif self.ids.io_check.active == False:
+            self.ids.iotext.color = "black"    
         return rb_play, hl_play, oe_play, io_play, su_play 
 
-    def rb_checked(self, instance, value):
+    def rb_checked(self):
         pass
-    def hl_checked(self, instance, value):
+    def hl_checked(self):
         pass
-    def oe_checked(self, instance, value):
+    def oe_checked(self):
         pass
-    def io_checked(self, instance, value):
+    def io_checked(self, *args):
         pass
     def back(self, *args):
         self.parent.current = "mainmenuwindow"
@@ -344,6 +355,65 @@ class OddEven(Screen):
     def exit(self):
         half_build_deck()
         self.parent.current = "mainmenuwindow"
+
+class InOut(Screen):
+    global drinks
+    def __init__(self, **kwargs):
+        super(InOut, self).__init__(**kwargs)
+        Clock.schedule_once(self.update)
+
+    def update(self, dt):
+        self.ids.inn.disabled = False
+        self.ids.out.disabled = False
+        self.ids.drinks.text = f'Drinks: {drinks}'
+        self.ids.waiting.text = "Waiting..."
+        self.ids.cardimage.source = "Images/card_back.png"
+        self.ids.cardimage.reload()
+
+    def pressed(self, pick):
+        global drinks
+        self.ids.inn.disabled = True
+        self.ids.out.disabled = True
+        p = random.randint(0, len(deck)-1)
+        self.ids.cardimage.source = (deck[p][3])
+        self.ids.cardimage.reload()
+        print(deck[p][2])
+        if pick == 1:
+            in_or_out = (deck[p][0])
+        elif pick == 2:
+            in_or_out = (deck[p][0])
+        if in_or_out == True:
+            del deck[p]
+            if len(deck) == 0:
+                self.parent.current = "nomorecards"
+            else:          
+                print(f"Cards left: {len(deck)}")                       # delete print later
+                print(f"Drinks: {drinks}")                              # delete print later
+                self.ids.waiting.text = "Correct"
+                Clock.schedule_once(self.next_question, 1)
+                return drinks
+        else:
+            del deck[p]
+            if len(deck) == 0:
+                self.parent.current = "nomorecards"
+            else:
+                drinks += 1
+                print(f"Cards left: {len(deck)}")                       # delete print later
+                print(f"Drinks: {drinks}")  
+                self.ids.waiting.text = "Incorrect"
+                Clock.schedule_once(self.back_question, 1)
+    
+    def next_question(self, *args):
+        self.parent.current = "nextplayerwindow"
+    def back_question(self, *args):
+        if rb_play == 1:
+            self.parent.current = "redblackwindow"
+        elif rb_play == 0:
+            Clock.schedule_once(self.update, 1)
+    def exit(self):
+        half_build_deck()
+        self.parent.current = "mainmenuwindow"
+
 
 class NextPlayer(Screen):
     global drinks
