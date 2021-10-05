@@ -1,0 +1,480 @@
+#:import utils kivy.utils
+#:import ew kivy.uix.effectwidget
+#:import CheckBox kivy.uix.checkbox
+
+
+<Button>
+    font_size: 32
+    bold: True
+    background_normal: ""
+<StartButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<SettingsButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<CreditsButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<RedButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<BlackButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<HigherButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<LowerButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<OddButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<EvenButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<QuitButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<NextPlayerButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<RebuildButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#B0B0B0')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+<Label>
+    font_size: 28
+    background_normal: ""
+    color: (0, 0, 0, 1)
+    bold: True
+
+
+WindowManager:
+
+    MainMenu:
+    SettingsMenu:
+    RedBlack:
+    HighLow:
+    OddEven:
+    NextPlayer:
+    NoMoreCards:
+
+<MainMenu>
+    name: "mainmenuwindow"
+    on_pre_enter: root.update()
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            id: title
+            text: "Red or Black"
+            size_hint: (1, 1.3)
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 10
+            padding: (10, 10)
+            StartButton:
+                id: startgame
+                text: "Start Game"
+                font_size: (self.width/20 + self.height/10)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                on_press: root.start()
+            SettingsButton:
+                id: settings
+                text: "Settings"
+                font_size: (self.width/20 + self.height/10)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                on_press: root.settings()
+            CreditsButton:
+                id: crdeits
+                text: "Credits"
+                font_size: (self.width/20 + self.height/10)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                #on_press: root.credits()
+            QuitButton:
+                id: exit
+                text: "Exit?"
+                font_size: (self.width/20 + self.height/10)
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                on_press: root.exit()
+<SettingsMenu>
+    name: "settingswindow"
+    on_pre_enter: root.update()
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 30
+        padding: (30, 30)
+        Label:
+            text: "Game Settings:"
+        GridLayout:
+            cols: 2
+            Label:
+                id: rbtext
+                text: "Red or Black"
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+            Switch:
+                id: rb_check
+                pos_hint: {'right_x', 'center_y'}
+                active: True
+                on_active: root.rb_checked(self, self.active), root.update()
+            Label:
+                id: hltext
+                text: "Higher or Lower"
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+            Switch:
+                id: hl_check
+                active: True
+                on_active: root.hl_checked(self, self.active), root.update()
+            Label:
+                id: oetext
+                text: "Odd or Even"
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+            Switch:
+                id: oe_check
+                active: True
+                on_active: root.oe_checked(self, self.active), root.update()
+        QuitButton:
+            text: "Return"
+            on_press: root.back()
+            size_hint: (1, 0.4)
+<RedBlack>
+    name: "redblackwindow"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        Label:
+            text: "Waiting..."
+            id: waiting
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+        Image: 
+            id: cardimage
+            source: "Images/card_back.png"
+            size_hint_x: 1
+            size_hint_y: root.height*0.5807
+            allow_stretch: True
+            keep_ratio: True
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.1613
+            spacing: 10
+            padding: 10
+            RedButton:
+                text: "RED"
+                id: red
+                on_press: root.pressed(1)
+                color:utils.get_color_from_hex('#141414')
+            BlackButton:
+                text: "BLACK"
+                id: black
+                on_press: root.pressed(2)
+                color: utils.get_color_from_hex('#F2F2F2') 
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+            padding: 10
+            Label:
+                id: drinks
+                text: ""
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle' 
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
+<HighLow>
+    name: "highlowwindow"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        Label:
+            text: "Waiting..."
+            id: waiting
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+        Image: 
+            id: cardimage
+            source: "Images/card_back.png"
+            size_hint_x: 1
+            size_hint_y: root.height*0.5807
+            allow_stretch: True
+            keep_ratio: True
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.1613
+            spacing: 10
+            padding: 10
+            HigherButton:
+                text: "HIGHER"
+                id: higher
+                on_press: root.pressed(1)
+                color:utils.get_color_from_hex('#141414')
+            LowerButton:
+                text: "LOWER"
+                id: lower
+                on_press: root.pressed(2)
+                color:utils.get_color_from_hex('#F2F2F2') 
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+            padding: 10
+            Label:
+                id: drinks
+                text: ""
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle' 
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
+
+<OddEven>
+
+    name: "oddevenwindow"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        Label:
+            text: "Waiting..."
+            id: waiting
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+        Image: 
+            id: cardimage
+            source: "Images/card_back.png"
+            size_hint_x: 1
+            size_hint_y: root.height*0.5807
+            allow_stretch: True
+            keep_ratio: True
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.1613
+            spacing: 10
+            padding: 10
+            OddButton:
+                text: "ODD"
+                id: odd
+                on_press: root.pressed(1)
+                color:utils.get_color_from_hex('#141414')
+            EvenButton:
+                text: "EVEN"
+                id: even
+                on_press: root.pressed(2)
+                color:utils.get_color_from_hex('#F2F2F2')
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+            padding: 10
+            Label:
+                id: drinks
+                text: ""
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle' 
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
+
+<NextPlayer>
+    name: "nextplayerwindow"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        GridLayout:
+            cols: 1
+            size_hint_x: 1
+            size_hint_y: root.height*0.71
+            padding: 10
+            Label:
+                id: drinkstally
+                text: ""
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                size_hint_x: 1
+                size_hint_y: root.height*0.29
+        GridLayout:
+            cols: 1
+            size_hint_x: 1
+            size_hint_y: root.height*0.29
+            padding: (root.width*0.2667, root.height*0.0968)
+            NextPlayerButton:
+                id: nextplayer
+                text: f"Next \nPlayer!"
+                font_size: 18
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                color:utils.get_color_from_hex('#141414')
+                on_press: root.pressed()
+<NoMoreCards>
+    name: "nomorecards"
+    on_pre_enter: root.update(0)
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        padding: (20, 20)
+        Label:
+            id: finaldrinks
+            size_hint: (1, 1.6)
+            text: ""
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: False
+        BoxLayout:
+            orientation: "vertical"
+            padding: (20, 20)
+            spacing: 20
+            RebuildButton:
+                id: rebuild
+                size_hint: (1, 0.3)
+                text: "Reshuffle and Play Again?"
+                text_size: self.size
+                halign: 'center'
+                valign: 'middle'
+                bold: False
+                on_press: root.restart()
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
+
