@@ -17,6 +17,8 @@ A running tally of the deck of cards is also kept but not shown to the players, 
 A simple game that I would be stoked with if i could have it not only running fine, but looking fine also.
 Any comments and help are always appreciated.
 
+Both .py and .kv files now added, plus all the card images needed.
+
 --Mike
 
     ### Drink Responsibly ###
