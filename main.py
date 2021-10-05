@@ -145,6 +145,9 @@ class SettingsMenu(Screen):
         if int(rb_play + hl_play + oe_play) >= 2:
             self.ids.io_check.disabled = False
 
+# this shit better push
+
+
         if self.ids.io_check.active == True:
             self.ids.iotext.color = "green"
         elif self.ids.io_check.active == False:
