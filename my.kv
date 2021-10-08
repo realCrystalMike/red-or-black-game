@@ -1,12 +1,14 @@
 #:import utils kivy.utils
 #:import ew kivy.uix.effectwidget
 #:import CheckBox kivy.uix.checkbox
-
+#:import CardTransition kivy.uix.screenmanager.CardTransition
 
 <Button>
     font_size: 32
     bold: True
-    background_normal: ""
+    #background_normal: ""
+    on_release: 
+        app.root.transition = CardTransition()
 <StartButton@Button>
     background_color: (0, 0, 0, 0)
     canvas.before:
@@ -34,15 +36,17 @@
             size: self.size
             pos: self.pos
             radius: [10]
-<RedButton@Button>
-    background_color: (0, 0, 0, 0)
-    canvas.before:
-        Color:
-            rgba:utils.get_color_from_hex('#C0392B')
-        RoundedRectangle:
-            size: self.size
-            pos: self.pos
-            radius: [25]
+# <RedButton@Button>
+#     
+#     background_color: (0, 0, 0, 0)
+#     # canvas.before: 
+        
+#     #     Color:
+#     #         rgba:utils.get_color_from_hex('#C0392B')
+#     #     RoundedRectangle:
+#     #         size: self.size
+#     #         pos: self.pos
+#     #         radius: [25]
 <BlackButton@Button>
     background_color: (0, 0, 0, 0)
     canvas.before:
@@ -106,6 +110,42 @@
             size: self.size
             pos: self.pos
             radius: [25]
+<DiamondsButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<SpadesButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<HeartsButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#C0392B')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
+<ClubsButton@Button>
+    background_color: (0, 0, 0, 0)
+    canvas.before:
+        Color:
+            rgba:utils.get_color_from_hex('#141414')
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [25]
 <QuitButton@Button>
     background_color: (0, 0, 0, 0)
     canvas.before:
@@ -141,19 +181,38 @@
 
 
 WindowManager:
-
+    StartDisplay:
     MainMenu:
     SettingsMenu:
     RedBlack:
     HighLow:
     OddEven:
     InOut:
+    Suits:
     NextPlayer:
     NoMoreCards:
-
+<StartDisplay>
+    name: "startdisplay"
+    orientation: "vertical"
+    on_enter: root.on_enter()
+    Image:
+        id: gif
+        source: 'Images/OTPPlogoanimation.gif'
+        pos: self.pos
+        size_hint: None, None
+        size: root.size
+        allow_stretch: True
+        keep_ratio: False
+        anim_delay: 0.05
+        anim_loop: 1
 <MainMenu>
     name: "mainmenuwindow"
     on_pre_enter: root.update()
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         Label:
@@ -203,6 +262,11 @@ WindowManager:
 <SettingsMenu>
     name: "settingswindow"
     on_pre_enter: root.update()
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -212,6 +276,7 @@ WindowManager:
             text: "Game Settings:"
         GridLayout:
             cols: 2
+            rows: 5
             Label:
                 id: rbtext
                 text: "Red or Black"
@@ -220,8 +285,10 @@ WindowManager:
                 valign: "middle"
             Switch:
                 id: rb_check
-                pos_hint: {'right_x', 'center_y'}
+                halign: "right"
                 active: True
+                # size_hint_x: None
+                # width: 100
                 on_active: root.update()
             Label:
                 id: hltext
@@ -253,6 +320,16 @@ WindowManager:
                 id: io_check
                 active: False
                 on_active: root.update()
+            Label:
+                id: sutext
+                text: "Suits"
+                text_size: self.size
+                halign: "left"
+                valign: "middle"
+            Switch:
+                id: su_check
+                active: False
+                on_active: root.update()
         QuitButton:
             text: "Return"
             on_press: root.back()
@@ -260,6 +337,11 @@ WindowManager:
 <RedBlack>
     name: "redblackwindow"
     on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -282,11 +364,12 @@ WindowManager:
             size_hint_y: root.height*0.1613
             spacing: 10
             padding: 10
-            RedButton:
+            Button:
                 text: "RED"
                 id: red
                 on_press: root.pressed(1)
                 color:utils.get_color_from_hex('#141414')
+                background_normal: "Images/redButtonBackground.png"
             BlackButton:
                 text: "BLACK"
                 id: black
@@ -317,6 +400,11 @@ WindowManager:
 <HighLow>
     name: "highlowwindow"
     on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -375,6 +463,11 @@ WindowManager:
 <OddEven>
     name: "oddevenwindow"
     on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -433,7 +526,14 @@ WindowManager:
 <InOut>
     name: "inoutwindow"
     on_pre_enter: root.update(0)
+    on_leave: root.leave(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
+        id:layoutone
         orientation: "vertical"
         size: root.width, root.height
         spacing: 10
@@ -442,13 +542,22 @@ WindowManager:
             id: waiting
             size_hint_x: 1
             size_hint_y: root.height*0.129
-        Image: 
-            id: cardimage
-            source: "Images/card_back.png"
+        BoxLayout:
+            id: layouttwo
+            orientation: "horizontal"
             size_hint_x: 1
             size_hint_y: root.height*0.5807
-            allow_stretch: True
-            keep_ratio: True
+            spacing: 10
+            Image: 
+                id: cardimageone
+                source: "Images/card_back.png"
+                allow_stretch: True
+                keep_ratio: True
+            Image: 
+                id: cardimagetwo
+                source: "Images/card_back.png"
+                allow_stretch: True
+                keep_ratio: True
         BoxLayout:
             orientation: "horizontal"
             size_hint_x: 1
@@ -487,9 +596,86 @@ WindowManager:
                 pos_hint: {'right':1, 'center_y':0.5}
                 color: utils.get_color_from_hex('#141414')
                 on_press: root.exit()
+<Suits>
+    name: "suitswindow"
+    on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
+    BoxLayout:
+        orientation: "vertical"
+        size: root.width, root.height
+        spacing: 10
+        Label:
+            text: "Waiting..."
+            id: waiting
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+        Image: 
+            id: cardimage
+            source: "Images/card_back.png"
+            size_hint_x: 1
+            size_hint_y: root.height*0.5807
+            allow_stretch: True
+            keep_ratio: True
+        GridLayout:
+            cols: 2
+            size_hint_x: 1
+            size_hint_y: root.height*0.1613
+            spacing: 10
+            padding: 10
+            DiamondsButton:
+                text: "DIAMOND"
+                id: diamonds
+                on_press: root.pressed(3)
+                color:utils.get_color_from_hex('#141414')
+            SpadesButton:
+                text: "SPADE"
+                id: spades
+                on_press: root.pressed(1)
+                color:utils.get_color_from_hex('#F2F2F2')
+            HeartsButton:
+                text: "HEART"
+                id: hearts
+                on_press: root.pressed(4)
+                color:utils.get_color_from_hex('#141414')
+            ClubsButton:
+                text: "CLUB"
+                id: clubs
+                on_press: root.pressed(2)
+                color:utils.get_color_from_hex('#F2F2F2')
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_x: 1
+            size_hint_y: root.height*0.129
+            padding: 10
+            Label:
+                id: drinks
+                text: ""
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle' 
+            QuitButton:
+                text: "Quit?"
+                font_size: 14
+                text_size: self.size
+                halign: 'center'
+                valign:'middle'
+                bold: True
+                size_hint: (0.35, 0.6)
+                pos_hint: {'right':1, 'center_y':0.5}
+                color: utils.get_color_from_hex('#141414')
+                on_press: root.exit()
 <NextPlayer>
     name: "nextplayerwindow"
     on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
@@ -526,6 +712,11 @@ WindowManager:
 <NoMoreCards>
     name: "nomorecards"
     on_pre_enter: root.update(0)
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'Images/background.png'
     BoxLayout:
         orientation: "vertical"
         size: root.width, root.height
