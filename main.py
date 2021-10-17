@@ -1,5 +1,6 @@
 from logging import root
 import kivy
+
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import ObjectProperty
@@ -9,8 +10,11 @@ from kivy.core.window import Window
 from kivy.core.image import Image as CoreImage
 from kivy.uix.screenmanager import CardTransition, ScreenManager,  Screen, ShaderTransition, SlideTransition
 from kivy.uix.checkbox import CheckBox
+from kivy.core.text import LabelBase
+from kivy.lang import Builder
 from kivy.uix.videoplayer import VideoPlayer
 import random
+import webbrowser
 
 one_spades = (1, 2, 'One of Spades', "Images/ace_spades.png", 1)
 two_spades = (2, 2, 'Two of Spades', "Images/two_spades.png", 1)
@@ -81,14 +85,19 @@ su_play = 0
 
 # adds all "cards" back to the deck after finishing or quitting the round
 def rebuild_deck():
-    global deck
+    global deck, drinks
     deck = [(one_spades), (two_spades), (three_spades), (four_spades), (five_spades), (six_spades), (seven_spades), (eight_spades), (nine_spades), (ten_spades), (joker_spades), (queen_spades), (king_spades), (one_clubs), (two_clubs), (three_clubs), (four_clubs), (five_clubs), (six_clubs), (seven_clubs), (eight_clubs), (nine_clubs), (ten_clubs), (joker_clubs), (queen_clubs), (king_clubs), (one_dmnds), (two_dmnds), (three_dmnds), (four_dmnds), (five_dmnds), (six_dmnds), (seven_dmnds), (eight_dmnds), (nine_dmnds), (ten_dmnds), (joker_dmnds), (queen_dmnds), (king_dmnds), (one_hearts), (two_hearts), (three_hearts), (four_hearts), (five_hearts), (six_hearts), (seven_hearts), (eight_hearts), (nine_hearts), (ten_hearts), (joker_hearts), (queen_hearts), (king_hearts)]
-    return deck
+    drinks = 0
+    return deck, drinks
 
 #  deletes cards from "stage deck", and clears for next go
 def clear_stage_deck():
     stage_deck.clear()
     print(stage_deck)
+
+# sets the reference to the preferred font
+LabelBase.register(name='Fredoka', 
+                   fn_regular='FredokaOne-Regular.ttf')
 
 class WindowManager(ScreenManager):
     pass
@@ -104,12 +113,12 @@ class StartDisplay(Screen):
     def update_time(self, sec):
         self.secs = self.secs+1
         '''  30 seconds'''
+        if self.secs == 1:
+            self.ids.gif.anim_delay = 1/20
         if self.secs == 5:
+            self.ids.gif.source = "Images/cheersLogoExpanded.png"
+        if self.secs == 8:
             self.parent.current = "mainmenuwindow"
-
-    # def on_enter(self):
-    #     self.ids.gif.anim_delay = 0.10
-
 
 class MainMenu(Screen):
     # prints out all the rounds that will be played, information purposes
@@ -134,8 +143,7 @@ class MainMenu(Screen):
         self.parent.current = "settingswindow"
 
     def credits(self, *args):
-        #self.parent.current = "creditswindow"
-        pass
+        self.parent.current = "nomorecards"
 
     def exit(self):
         quit()
@@ -197,6 +205,12 @@ class SettingsMenu(Screen):
             self.ids.io_check.disabled = False
         return rb_play, hl_play, oe_play, io_play, su_play 
 
+    def back(self, *args):
+        self.parent.current = "mainmenuwindow"
+# Credits complete
+class Credits(Screen):
+    def donate(self):
+        webbrowser.open("https://www.paypal.com/donate?business=79LPXR4HHHWCC&no_recurring=0&item_name=All+donations+towards+OTPP+are+greatly+appreciated+and+go+towards+sustenance.&currency_code=NZD")
     def back(self, *args):
         self.parent.current = "mainmenuwindow"
 # RedBlack complete
@@ -425,7 +439,10 @@ class InOut(Screen):
         self.ids.cardimageone.reload()
         print(deck[p][2])
         # setting formula to assess whether "odd" or "even"    
-        is_inbetween = int(deck[p][0]) in range(int(stage_deck[0][0]), int(stage_deck[1][0]))
+        if int(stage_deck[0][0]) < int(stage_deck[1][0]):
+            is_inbetween = int(deck[p][0]) in range(int(stage_deck[0][0]), int(stage_deck[1][0]))
+        else:
+            is_inbetween = int(deck[p][0]) in range(int(stage_deck[1][0]), int(stage_deck[0][0]))
         if pick == 1:
             choice = True
         elif pick == 2:
@@ -598,10 +615,10 @@ class NoMoreCards(Screen):
         
 kv = Builder.load_file("my.kv")
 
-class MyMainApp(App):
+class RedorBlack(App):
     def build(self):
-        #Window.clearcolor = (242/255.0, 242/255.0, 242/255.0, 1)
+        Window.clearcolor = (1, 1, 1, 1)
         return kv
 
 if __name__ == "__main__":
-    MyMainApp().run()
+    RedorBlack().run()
