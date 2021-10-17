@@ -143,7 +143,7 @@ class MainMenu(Screen):
         self.parent.current = "settingswindow"
 
     def credits(self, *args):
-        self.parent.current = "nomorecards"
+        self.parent.current = "creditswindow"
 
     def exit(self):
         quit()
@@ -613,12 +613,12 @@ class NoMoreCards(Screen):
         rebuild_deck()
         self.parent.current = "mainmenuwindow"
         
-kv = Builder.load_file("my.kv")
+kv = Builder.load_file("redorblack.kv")
 
-class RedorBlack(App):
+class RedOrBlackApp(App):
     def build(self):
         Window.clearcolor = (1, 1, 1, 1)
         return kv
 
 if __name__ == "__main__":
-    RedorBlack().run()
+    RedOrBlackApp().run()
